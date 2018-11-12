@@ -1,25 +1,27 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import { setPrincipal, setInterest, setYears } from '../actions/index';
 
-// Connect this component
 function InterestCalculator(props) {
-  return (
+
+    const { dispatch } = props;
+    return (
         <form className="interest-calculator"
             onSubmit={e => e.preventDefault()}>
             <div className="form-group">
                 <label htmlFor="principal">Principal ($)</label>
                 <input type="number" id="principal" value={props.principal}
-                    min="0" />
+                    min="0" onChange={e => dispatch(setPrincipal(e.target.value))} />
             </div>
             <div className="form-group">
                 <label htmlFor="interest">Interest rate (%)</label>
                 <input type="number" id="interest" value={props.interest}
-                    min="0" max="100" step="0.1" />
+                    min="0" max="100" step="0.1" onChange={e => dispatch(setInterest(e.target.value))} />
             </div>
             <div className="form-group">
                 <label htmlFor="years">Years</label>
                 <input type="number" id="years" value={props.years}
-                    min="0" max="100" />
+                    min="0" max="100" onChange={e => dispatch(setYears(e.target.value))} />
             </div>
             <div className="form-group">
                 <label htmlFor="total">Total</label>
@@ -30,15 +32,6 @@ function InterestCalculator(props) {
 }
 
 
-function mapStateToProps(state){
-  return {
-    principal: state.principal,
-    interest: state.interest,
-    years: state.years,
-    total: state.principal * Math.pow(1 + state.interest / 100, state.years) 
-  }
-}
-
 InterestCalculator.defaultProps = {
     principal: 0,
     interest: 0,
@@ -46,6 +39,11 @@ InterestCalculator.defaultProps = {
     total: 0
 };
 
+export const mapStateToProps = state => ({
+    principal: state.principal,
+    interest: state.interest,
+    years: state.years,
+    total: state.principal * Math.pow(1 + state.interest / 100, state.years)
+});
 
 export default connect(mapStateToProps)(InterestCalculator);
-
